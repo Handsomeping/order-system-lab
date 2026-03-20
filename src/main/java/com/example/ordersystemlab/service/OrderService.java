@@ -1,5 +1,7 @@
 package com.example.ordersystemlab.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.ordersystemlab.entity.OrderRecord;
@@ -27,5 +29,12 @@ public class OrderService {
 
         return orderRecordRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
+    }
+    
+    public Page<OrderRecord> getOrders(Pageable pageable) {
+    	System.out.println("2026/03/20 getOrders");
+    	System.out.println(orderRecordRepository.getClass());
+    	System.out.println("2026/03/20 getOrders");
+        return orderRecordRepository.findAll(pageable);
     }
 }
