@@ -32,9 +32,6 @@ public class OrderService {
     }
     
     public Page<OrderRecord> getOrders(Pageable pageable) {
-    	System.out.println("2026/03/20 getOrders");
-    	System.out.println(orderRecordRepository.getClass());
-    	System.out.println("2026/03/20 getOrders");
         return orderRecordRepository.findAll(pageable);
     }
 }
