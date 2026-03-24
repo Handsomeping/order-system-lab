@@ -1,7 +1,9 @@
 package com.example.ordersystemlab.service;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.ordersystemlab.entity.OrderRecord;
@@ -32,6 +34,13 @@ public class OrderService {
     }
     
     public Page<OrderRecord> getOrders(Pageable pageable) {
+    	if (pageable.getSort().isUnsorted()) {
+    		pageable = PageRequest.of(
+                    pageable.getPageNumber(),
+                    pageable.getPageSize(),
+                    Sort.by("quantity").descending()
+            );
+    	}
         return orderRecordRepository.findAll(pageable);
     }
 }
