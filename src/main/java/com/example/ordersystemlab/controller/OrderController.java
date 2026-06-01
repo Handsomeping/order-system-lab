@@ -6,11 +6,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.ordersystemlab.dto.CreateOrderRequest;
+import com.example.ordersystemlab.dto.UpdateOrderRequest;
 import com.example.ordersystemlab.entity.OrderRecord;
 import com.example.ordersystemlab.service.OrderService;
 
@@ -42,5 +44,17 @@ public class OrderController {
     @GetMapping
     public Page<OrderRecord> getOrders(Pageable pageable) {
         return orderService.getOrders(pageable);
+    }
+    
+    @PutMapping("/{id}")
+    public OrderRecord updateOrder(
+            @PathVariable Long id,
+            @RequestBody UpdateOrderRequest request
+    ) {
+        return orderService.updateOrder(
+                id,
+                request.getProductName(),
+                request.getQuantity()
+        );
     }
 }

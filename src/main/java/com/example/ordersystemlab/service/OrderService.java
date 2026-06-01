@@ -60,4 +60,17 @@ public class OrderService {
     	
         return orderRecordRepository.findAll(pageable);
     }
+    
+    public OrderRecord updateOrder(Long id, String productName, Integer quantity) {
+        OrderRecord order = orderRecordRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Order not found: " + id
+                ));
+
+        order.setProductName(productName);
+        order.setQuantity(quantity);
+
+        return orderRecordRepository.save(order);
+    }
 }
