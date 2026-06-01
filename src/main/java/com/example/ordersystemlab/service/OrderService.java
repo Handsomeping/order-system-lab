@@ -34,8 +34,7 @@ public class OrderService {
 
     public OrderRecord getOrder(Long id) {
 
-        return orderRecordRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+        return findOrderById(id);
     }
     
     public Page<OrderRecord> getOrders(Pageable pageable) {
@@ -62,15 +61,19 @@ public class OrderService {
     }
     
     public OrderRecord updateOrder(Long id, String productName, Integer quantity) {
-        OrderRecord order = orderRecordRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Order not found: " + id
-                ));
+        OrderRecord order = findOrderById(id);
 
         order.setProductName(productName);
         order.setQuantity(quantity);
 
         return orderRecordRepository.save(order);
+    }
+    
+    private OrderRecord findOrderById(Long id) {
+        return orderRecordRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "Order not found: " + id
+                ));
     }
 }
