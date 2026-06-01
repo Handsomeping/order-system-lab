@@ -15,61 +15,53 @@ import com.example.ordersystemlab.repository.OrderRecordRepository;
 @Service
 public class OrderService {
 
-    private final OrderRecordRepository orderRecordRepository;
+	private final OrderRecordRepository orderRecordRepository;
 
-    public OrderService(OrderRecordRepository orderRecordRepository) {
-        this.orderRecordRepository = orderRecordRepository;
-    }
+	public OrderService(OrderRecordRepository orderRecordRepository) {
+		this.orderRecordRepository = orderRecordRepository;
+	}
 
-    public OrderRecord createOrder(String productName, Integer quantity) {
+	public OrderRecord createOrder(String productName, Integer quantity) {
 
-        OrderRecord order = new OrderRecord();
-        order.setProductName(productName);
-        order.setQuantity(quantity);
+		OrderRecord order = new OrderRecord();
+		order.setProductName(productName);
+		order.setQuantity(quantity);
 
-        return orderRecordRepository.save(order);
-    }
+		return orderRecordRepository.save(order);
+	}
 
-    public OrderRecord getOrder(Long id) {
+	public OrderRecord getOrder(Long id) {
 
-        return findOrderById(id);
-    }
-    
-    public Page<OrderRecord> getOrders(Pageable pageable) {
-    	if (pageable.getSort().isUnsorted()) {
-            pageable = PageRequest.of(
-                    pageable.getPageNumber(),
-                    pageable.getPageSize(),
-                    Sort.by(OrderSortField.ID.getFieldName()).descending()
-            );
-        } else {
-            pageable.getSort().forEach(sort -> {
-                if (!OrderSortField.isAllowed(sort.getProperty())) {
-                    throw new ResponseStatusException(
-                            HttpStatus.BAD_REQUEST,
-                            "Invalid sort field: " + sort.getProperty()
-                    );
-                }
-            });
-        }
-    	
-        return orderRecordRepository.findAll(pageable);
-    }
-    
-    public OrderRecord updateOrder(Long id, String productName, Integer quantity) {
-        OrderRecord order = findOrderById(id);
+		return findOrderById(id);
+	}
 
-        order.setProductName(productName);
-        order.setQuantity(quantity);
+	public Page<OrderRecord> getOrders(Pageable pageable) {
+		if (pageable.getSort().isUnsorted()) {
+			pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+					Sort.by(OrderSortField.ID.getFieldName()).descending());
+		} else {
+			pageable.getSort().forEach(sort -> {
+				if (!OrderSortField.isAllowed(sort.getProperty())) {
+					throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+							"Invalid sort field: " + sort.getProperty());
+				}
+			});
+		}
 
-        return orderRecordRepository.save(order);
-    }
-    
-    private OrderRecord findOrderById(Long id) {
-        return orderRecordRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Order not found: " + id
-                ));
-    }
+		return orderRecordRepository.findAll(pageable);
+	}
+
+	public OrderRecord updateOrder(Long id, String productName, Integer quantity) {
+		OrderRecord order = findOrderById(id);
+
+		order.setProductName(productName);
+		order.setQuantity(quantity);
+
+		return orderRecordRepository.save(order);
+	}
+
+	private OrderRecord findOrderById(Long id) {
+		return orderRecordRepository.findById(id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found: " + id));
+	}
 }

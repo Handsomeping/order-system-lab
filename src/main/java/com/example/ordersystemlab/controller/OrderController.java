@@ -1,6 +1,5 @@
 package com.example.ordersystemlab.controller;
 
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,41 +19,31 @@ import com.example.ordersystemlab.service.OrderService;
 @RequestMapping("/orders")
 public class OrderController {
 
-    private final OrderService orderService;
+	private final OrderService orderService;
 
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
-    }
+	public OrderController(OrderService orderService) {
+		this.orderService = orderService;
+	}
 
-    @PostMapping
-    public OrderRecord createOrder(@RequestBody CreateOrderRequest request) {
+	@PostMapping
+	public OrderRecord createOrder(@RequestBody CreateOrderRequest request) {
 
-        return orderService.createOrder(
-                request.getProductName(),
-                request.getQuantity()
-        );
-    }
+		return orderService.createOrder(request.getProductName(), request.getQuantity());
+	}
 
-    @GetMapping("/{id}")
-    public OrderRecord getOrder(@PathVariable Long id) {
+	@GetMapping("/{id}")
+	public OrderRecord getOrder(@PathVariable Long id) {
 
-        return orderService.getOrder(id);
-    }
-    
-    @GetMapping
-    public Page<OrderRecord> getOrders(Pageable pageable) {
-        return orderService.getOrders(pageable);
-    }
-    
-    @PutMapping("/{id}")
-    public OrderRecord updateOrder(
-            @PathVariable Long id,
-            @RequestBody UpdateOrderRequest request
-    ) {
-        return orderService.updateOrder(
-                id,
-                request.getProductName(),
-                request.getQuantity()
-        );
-    }
+		return orderService.getOrder(id);
+	}
+
+	@GetMapping
+	public Page<OrderRecord> getOrders(Pageable pageable) {
+		return orderService.getOrders(pageable);
+	}
+
+	@PutMapping("/{id}")
+	public OrderRecord updateOrder(@PathVariable Long id, @RequestBody UpdateOrderRequest request) {
+		return orderService.updateOrder(id, request.getProductName(), request.getQuantity());
+	}
 }
