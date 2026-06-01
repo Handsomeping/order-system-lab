@@ -1,12 +1,17 @@
 package com.example.ordersystemlab.service;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.ordersystemlab.entity.OrderRecord;
+import com.example.ordersystemlab.enums.OrderSortField;
 import com.example.ordersystemlab.repository.OrderRecordRepository;
 
 @Service
@@ -38,9 +43,21 @@ public class OrderService {
     		pageable = PageRequest.of(
                     pageable.getPageNumber(),
                     pageable.getPageSize(),
-                    Sort.by("quantity").descending()
+                    Sort.by(OrderSortField.ID.getFieldName()).descending()
             );
+    	} 
+    	else {
+    		List<Sort.Order> sortList = pageable.getSort().toList();
+    		sortList.forEach( (sort) -> { 
+    			if (!OrderSortField.isAllowed(sort.getProperty())) {
+                    throw new ResponseStatusException(
+                            HttpStatus.BAD_REQUEST,
+                            "Invalid sort field: " + sort.getProperty()
+                    );
+                }
+    		});
     	}
+    	
         return orderRecordRepository.findAll(pageable);
     }
 }
