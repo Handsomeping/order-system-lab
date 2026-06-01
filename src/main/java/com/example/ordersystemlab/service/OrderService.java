@@ -1,7 +1,5 @@
 package com.example.ordersystemlab.service;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -39,23 +37,21 @@ public class OrderService {
     
     public Page<OrderRecord> getOrders(Pageable pageable) {
     	if (pageable.getSort().isUnsorted()) {
-    		pageable = PageRequest.of(
+            pageable = PageRequest.of(
                     pageable.getPageNumber(),
                     pageable.getPageSize(),
                     Sort.by(OrderSortField.ID.getFieldName()).descending()
             );
-    	} 
-    	else {
-    		List<Sort.Order> sortList = pageable.getSort().toList();
-    		sortList.forEach( (sort) -> { 
-    			if (!OrderSortField.isAllowed(sort.getProperty())) {
+        } else {
+            pageable.getSort().forEach(sort -> {
+                if (!OrderSortField.isAllowed(sort.getProperty())) {
                     throw new ResponseStatusException(
                             HttpStatus.BAD_REQUEST,
                             "Invalid sort field: " + sort.getProperty()
                     );
                 }
-    		});
-    	}
+            });
+        }
     	
         return orderRecordRepository.findAll(pageable);
     }
