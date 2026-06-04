@@ -49,7 +49,8 @@ public class OrderService {
 			});
 		}
 
-		return orderRecordRepository.findAll(pageable);
+		return orderRecordRepository.searchOrders(request.getProductName(), request.getMinQuantity(),
+				request.getMaxQuantity(), pageable);
 	}
 
 	public OrderRecord updateOrder(Long id, String productName, Integer quantity) {
