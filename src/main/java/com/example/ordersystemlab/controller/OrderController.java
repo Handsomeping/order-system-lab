@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.ordersystemlab.dto.CreateOrderRequest;
 import com.example.ordersystemlab.dto.UpdateOrderRequest;
 import com.example.ordersystemlab.entity.OrderRecord;
+import com.example.ordersystemlab.request.OrderSearchRequest;
 import com.example.ordersystemlab.service.OrderService;
 
 import jakarta.validation.Valid;
@@ -41,8 +42,8 @@ public class OrderController {
 	}
 
 	@GetMapping
-	public Page<OrderRecord> getOrders(Pageable pageable) {
-		return orderService.getOrders(pageable);
+	public Page<OrderRecord> getOrders(OrderSearchRequest request, Pageable pageable) {
+		return orderService.getOrders(request, pageable);
 	}
 
 	@PutMapping("/{id}")

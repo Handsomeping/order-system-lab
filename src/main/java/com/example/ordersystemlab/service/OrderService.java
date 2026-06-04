@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.example.ordersystemlab.entity.OrderRecord;
 import com.example.ordersystemlab.enums.OrderSortField;
 import com.example.ordersystemlab.repository.OrderRecordRepository;
+import com.example.ordersystemlab.request.OrderSearchRequest;
 
 @Service
 public class OrderService {
@@ -35,7 +36,7 @@ public class OrderService {
 		return findOrderById(id);
 	}
 
-	public Page<OrderRecord> getOrders(Pageable pageable) {
+	public Page<OrderRecord> getOrders(OrderSearchRequest request, Pageable pageable) {
 		if (pageable.getSort().isUnsorted()) {
 			pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
 					Sort.by(OrderSortField.ID.getFieldName()).descending());
