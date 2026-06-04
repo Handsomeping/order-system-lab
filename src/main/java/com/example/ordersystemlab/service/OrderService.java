@@ -60,6 +60,11 @@ public class OrderService {
 		return orderRecordRepository.save(order);
 	}
 
+	public void deleteOrder(Long id) {
+		OrderRecord order = findOrderById(id);
+		orderRecordRepository.delete(order);
+	}
+
 	private OrderRecord findOrderById(Long id) {
 		return orderRecordRepository.findById(id)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found: " + id));
