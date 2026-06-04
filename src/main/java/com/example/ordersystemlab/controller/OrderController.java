@@ -16,6 +16,8 @@ import com.example.ordersystemlab.dto.UpdateOrderRequest;
 import com.example.ordersystemlab.entity.OrderRecord;
 import com.example.ordersystemlab.service.OrderService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
@@ -27,7 +29,7 @@ public class OrderController {
 	}
 
 	@PostMapping
-	public OrderRecord createOrder(@RequestBody CreateOrderRequest request) {
+	public OrderRecord createOrder(@Valid @RequestBody CreateOrderRequest request) {
 
 		return orderService.createOrder(request.getProductName(), request.getQuantity());
 	}
@@ -44,7 +46,7 @@ public class OrderController {
 	}
 
 	@PutMapping("/{id}")
-	public OrderRecord updateOrder(@PathVariable Long id, @RequestBody UpdateOrderRequest request) {
+	public OrderRecord updateOrder(@PathVariable Long id, @Valid @RequestBody UpdateOrderRequest request) {
 		return orderService.updateOrder(id, request.getProductName(), request.getQuantity());
 	}
 
