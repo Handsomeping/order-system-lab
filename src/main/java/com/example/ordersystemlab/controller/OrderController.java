@@ -42,7 +42,7 @@ public class OrderController {
 	}
 
 	@GetMapping
-	public Page<OrderRecord> getOrders(OrderSearchRequest request, Pageable pageable) {
+	public Page<OrderRecord> getOrders(@Valid OrderSearchRequest request, Pageable pageable) {
 		return orderService.getOrders(request, pageable);
 	}
 

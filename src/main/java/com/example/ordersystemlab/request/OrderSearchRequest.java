@@ -1,11 +1,15 @@
 package com.example.ordersystemlab.request;
 
+import jakarta.validation.constraints.Min;
+
 public class OrderSearchRequest {
 
 	private String productName;
 
+	@Min(value = 1, message = "minQuantity must be at least 1")
 	private Integer minQuantity;
 
+	@Min(value = 1, message = "maxQuantity must be at least 1")
 	private Integer maxQuantity;
 
 	public String getProductName() {

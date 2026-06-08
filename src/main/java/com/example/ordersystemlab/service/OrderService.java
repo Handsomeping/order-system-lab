@@ -37,6 +37,8 @@ public class OrderService {
 	}
 
 	public Page<OrderRecord> getOrders(OrderSearchRequest request, Pageable pageable) {
+		validateOrderSearchRequest(request);
+		
 		if (pageable.getSort().isUnsorted()) {
 			pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
 					Sort.by(OrderSortField.ID.getFieldName()).descending());
@@ -70,5 +72,17 @@ public class OrderService {
 	private OrderRecord findOrderById(Long id) {
 		return orderRecordRepository.findById(id)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found: " + id));
+	}
+	
+	private void validateOrderSearchRequest(OrderSearchRequest request) {
+	    Integer minQuantity = request.getMinQuantity();
+	    Integer maxQuantity = request.getMaxQuantity();
+
+	    if (minQuantity != null && maxQuantity != null && minQuantity > maxQuantity) {
+	        throw new ResponseStatusException(
+	                HttpStatus.BAD_REQUEST,
+	                "minQuantity must not be greater than maxQuantity"
+	        );
+	    }
 	}
 }
