@@ -1,5 +1,7 @@
 package com.example.ordersystemlab.service;
 
+import java.time.LocalDateTime;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,7 +40,7 @@ public class OrderService {
 
 	public Page<OrderRecord> getOrders(OrderSearchRequest request, Pageable pageable) {
 		validateOrderSearchRequest(request);
-		
+
 		if (pageable.getSort().isUnsorted()) {
 			pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
 					Sort.by(OrderSortField.ID.getFieldName()).descending());
@@ -52,7 +54,7 @@ public class OrderService {
 		}
 
 		return orderRecordRepository.searchOrders(request.getProductName(), request.getMinQuantity(),
-				request.getMaxQuantity(), pageable);
+				request.getMaxQuantity(), request.getCreatedFrom(), request.getCreatedTo(), pageable);
 	}
 
 	public OrderRecord updateOrder(Long id, String productName, Integer quantity) {
@@ -73,16 +75,20 @@ public class OrderService {
 		return orderRecordRepository.findById(id)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found: " + id));
 	}
-	
-	private void validateOrderSearchRequest(OrderSearchRequest request) {
-	    Integer minQuantity = request.getMinQuantity();
-	    Integer maxQuantity = request.getMaxQuantity();
 
-	    if (minQuantity != null && maxQuantity != null && minQuantity > maxQuantity) {
-	        throw new ResponseStatusException(
-	                HttpStatus.BAD_REQUEST,
-	                "minQuantity must not be greater than maxQuantity"
-	        );
-	    }
+	private void validateOrderSearchRequest(OrderSearchRequest request) {
+		Integer minQuantity = request.getMinQuantity();
+		Integer maxQuantity = request.getMaxQuantity();
+		LocalDateTime createdFrom = request.getCreatedFrom();
+		LocalDateTime createdTo = request.getCreatedTo();
+
+		if (minQuantity != null && maxQuantity != null && minQuantity > maxQuantity) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					"minQuantity must not be greater than maxQuantity");
+		}
+
+		if (createdFrom != null && createdTo != null && createdFrom.isAfter(createdTo)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "createdFrom must not be after createdTo");
+		}
 	}
 }

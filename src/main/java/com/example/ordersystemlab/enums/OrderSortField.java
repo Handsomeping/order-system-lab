@@ -2,7 +2,7 @@ package com.example.ordersystemlab.enums;
 
 public enum OrderSortField {
 
-	ID("id"), QUANTITY("quantity");
+	ID("id"), QUANTITY("quantity"), CREATED_AT("createdAt");;
 
 	private final String fieldName;
 
