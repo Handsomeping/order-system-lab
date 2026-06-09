@@ -14,7 +14,7 @@ public interface OrderRecordRepository extends JpaRepository<OrderRecord, Long> 
 	@Query("""
 			SELECT o
 			FROM OrderRecord o
-			WHERE (:productName IS NULL OR o.productName = :productName)
+			WHERE (:productName IS NULL OR o.productName LIKE CONCAT('%', :productName, '%'))
 			  AND (:minQuantity IS NULL OR o.quantity >= :minQuantity)
 			  AND (:maxQuantity IS NULL OR o.quantity <= :maxQuantity)
 			  AND (:createdFrom IS NULL OR o.createdAt >= :createdFrom)

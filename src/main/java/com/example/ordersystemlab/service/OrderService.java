@@ -53,8 +53,9 @@ public class OrderService {
 			});
 		}
 
-		return orderRecordRepository.searchOrders(request.getProductName(), request.getMinQuantity(),
-				request.getMaxQuantity(), request.getCreatedFrom(), request.getCreatedTo(), pageable);
+		return orderRecordRepository.searchOrders(normalizeQueryString(request.getProductName()),
+				request.getMinQuantity(), request.getMaxQuantity(), request.getCreatedFrom(), request.getCreatedTo(),
+				pageable);
 	}
 
 	public OrderRecord updateOrder(Long id, String productName, Integer quantity) {
@@ -90,5 +91,13 @@ public class OrderService {
 		if (createdFrom != null && createdTo != null && createdFrom.isAfter(createdTo)) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "createdFrom must not be after createdTo");
 		}
+	}
+
+	private String normalizeQueryString(String value) {
+		if (value == null || value.isBlank()) {
+			return null;
+		}
+
+		return value.trim();
 	}
 }
